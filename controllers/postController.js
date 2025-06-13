@@ -6,7 +6,6 @@ const index = (req, res) => {
   const sql = `SELECT * FROM posts`;
   connection.query(sql, (err, results) => {
     if (err) return res.status(500).json({ error: "Database query failed" });
-    console.log(results);
     res.json({
       data: results,
       status: 200,
@@ -73,19 +72,12 @@ const modify = (req, res) => {
 //# DELETE
 
 const destroy = (req, res) => {
-  // const id = parseInt(req.params.id);
-  // const post = posts.find((post) => post.id === id);
-  // if (!post) {
-  //   res.status(404);
-  //   return res.json({
-  //     message: "Post non trovato",
-  //     error: "Not found",
-  //     status: 404,
-  //   });
-  // }
-  // posts.splice(posts.indexOf(post), 1);
-  // console.log("Lista aggiornata dei post: ", posts);
-  // res.sendStatus(204);
+  const { id } = req.params;
+  const sql = `DELETE FROM posts WHERE id = ? `;
+  connection.query(sql, [id], (err) => {
+    if (err) return res.status(500).json({ error: "Failed to delete a post" });
+    res.sendStatus(204);
+  });
 };
 
 module.exports = { index, show, store, update, modify, destroy };
