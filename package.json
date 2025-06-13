@@ -1,0 +1,18 @@
+{
+  "name": "express-blog-intro",
+  "version": "1.0.0",
+  "description": "con questa repo andremo a riprodurre il nostro blog personale",
+  "main": "app.js",
+  "scripts": {
+    "dev": "node --watch app.js",
+    "start": "node app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Giovanni Iapichino",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
+    "mysql2": "^3.14.1"
+  }
+}
