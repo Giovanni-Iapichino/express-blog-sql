@@ -32,6 +32,7 @@ ON tags . id = post_tag . tag_id
 WHERE post_id = ?`;
 
     connection.query(sqlTag, [postId], (err, results) => {
+      if (err) return res.status(500).json({ error: "Database query failed" });
       post.tags = results;
 
       res.json({
