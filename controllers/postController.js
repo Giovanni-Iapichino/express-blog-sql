@@ -16,13 +16,29 @@ const index = (req, res) => {
 //# SHOW
 
 const show = (req, res) => {
-  const { id } = req.params;
-  const sql = `SELECT * FROM posts WHERE id = ?`;
-  connection.query(sql, [id], (err, results) => {
+  const postId = parseInt(req.params.id);
+  const sqlPost = `SELECT * FROM posts WHERE id = ?`;
+  connection.query(sqlPost, [postId], (err, results) => {
     if (err) return res.status(500).json({ error: "Database query failed" });
     if (results.length === 0)
       return res.status(404).json({ error: "Post not found" });
-    res.json(results[0]);
+
+    const post = results[0];
+
+    const sqlTag = `SELECT tags.*
+FROM tags
+INNER JOIN post_tag
+ON tags . id = post_tag . tag_id
+WHERE post_id = ?`;
+
+    connection.query(sqlTag, [postId], (err, results) => {
+      post.tags = results;
+
+      res.json({
+        data: post,
+        status: 200,
+      });
+    });
   });
 };
 
@@ -66,9 +82,9 @@ const modify = (req, res) => {
 //# DELETE
 
 const destroy = (req, res) => {
-  const { id } = req.params;
+  const postId = parseInt(req.params.id);
   const sql = `DELETE FROM posts WHERE id = ? `;
-  connection.query(sql, [id], (err) => {
+  connection.query(sql, [postId], (err) => {
     if (err) return res.status(500).json({ error: "Failed to delete a post" });
     res.sendStatus(204);
   });
